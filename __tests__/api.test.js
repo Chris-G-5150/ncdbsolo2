@@ -33,19 +33,18 @@ describe("Challenge 2 /api/topics tests", () => {
         expect(body.msg).toEqual("Endpoint not found");
       });
   });
-
 });
 
 describe("challenge 3 get/api/info endpoints", () => {
   test("does /api return json object with info attached?", () => {
     return request(app)
-    .get('/api/')
+    .get('/api')
     .expect(200)
     .then(({body}) => {
-      console.log(body)
-      expect(body).toEqual({endPointsJSON})
+      console.log(body.endPointsJSON)
+      expect(body.endPointsJSON).toEqual(endPointsJSON)
     })
   })
 
 
-})
+});

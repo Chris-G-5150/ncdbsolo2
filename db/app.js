@@ -9,7 +9,7 @@ const {
 const app = express();
 
 app.get("/api/topics", getTopicsController);
-app.get("/api/", getInfoController)
+app.get("/api", getInfoController)
 app.get("/api/info/:infoId", getInfoController)
 
 app.use((err, req, res, next) => {
