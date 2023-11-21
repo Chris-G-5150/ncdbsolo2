@@ -8,3 +8,6 @@ exports.getTopicsController = (req, res, next) => {
     .catch(next);
 };
 
+exports.handle404Controller = (req, res) => {
+  return res.status(404).send({ msg: "Endpoint not found" });
+};

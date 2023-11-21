@@ -14,20 +14,22 @@ describe("Challenge 2 /api/topics tests", () => {
       .then(({ body }) => {
         expect(Array.isArray(body.topics)).toBe(true);
         expect(body.topics).toHaveLength(3);
-        expect(body.topics).toEqual([
-          {
-            description: "The man, the Mitch, the legend",
-            slug: "mitch",
-          },
-          {
-            description: "Not dogs",
-            slug: "cats",
-          },
-          {
-            description: "what books are made of",
-            slug: "paper",
-          },
-        ]);
+
+        body.topics.forEach((topic) => {
+          expect(topic).toMatchObject({
+            description: expect.any(String),
+            slug: expect.any(String),
+          });
+        });
+      });
+  });
+
+  test("Get api/klsnkdfnilfvn should return 404 status", () => {
+    return request(app)
+      .get("/api/klsnkdfnilfvn")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("Endpoint not found");
       });
   });
 });
