@@ -33,7 +33,8 @@ The following is _not_ a comprehensive list! Its purpose is just to get the ball
 
 ### GET `/not-a-route`
 
-- Status: ???
+- Status: 404
+- message: "Endpoint not found" 
 
 ---
 

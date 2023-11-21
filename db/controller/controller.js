@@ -1,4 +1,5 @@
-const { getTopicsModel } = require("../models/newsModels");
+const { getTopicsModel} = require("../models/newsModels");
+const endPointsJSON = require("../../endpoints.json")
 
 exports.getTopicsController = (req, res, next) => {
   getTopicsModel()
@@ -10,4 +11,9 @@ exports.getTopicsController = (req, res, next) => {
 
 exports.handle404Controller = (req, res) => {
   return res.status(404).send({ msg: "Endpoint not found" });
+};
+
+exports.getInfoController = (req, res) => {
+    return res.status(200).send({endPointsJSON})
+
 };
