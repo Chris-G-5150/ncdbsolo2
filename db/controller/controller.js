@@ -1,8 +1,11 @@
-const { fetchTopicsModel, fetchArticleByIdModel } = require("../models/newsModels");
+const {
+  fetchTopicsModel,
+  fetchArticleByIdModel,
+  fetchArticles,
+} = require("../models/newsModels");
 const endPointsJSON = require("../../endpoints.json");
 
 exports.getTopics = (req, res, next) => {
-  console.log("hello", "<====getTopics");
   fetchTopicsModel()
     .then((topics) => {
       res.status(200).send({ topics });
@@ -25,4 +28,10 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getInfo = (req, res) => {
   return res.status(200).send({ endPointsJSON });
+};
+
+exports.getArticles = (req, res) => {
+  fetchArticles().then((articleList) => {
+    return res.status(200).send({ articleList });
+  });
 };

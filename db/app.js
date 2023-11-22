@@ -5,6 +5,7 @@ const {
   handle404,
   getArticleById,
   getInfo,
+  getArticles,
 } = require("./controller/controller.js");
 
 const {
@@ -17,7 +18,8 @@ const app = express();
 
 app.get("/api/topics", getTopics);
 app.get("/api", getInfo);
-app.get("/api/articles/:article_id", getArticleById);
+app.get("/api/articles/:article_id", getArticleById)
+app.get("/api/articles", getArticles);
 
 app.use(customErrorHandler);
 app.use(handlePsqlErrors);

@@ -4,6 +4,9 @@ const app = require("../db/app.js");
 const db = require("../db/connection.js");
 const data = require("../db/data/test-data/index.js");
 const endPointsJSON = require("../endpoints.json");
+require("jest-sorted")
+
+
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
@@ -86,3 +89,53 @@ test("if a completely invalid ID is passed will throw a different error 400 Inva
       expect(body.msg).toBe("Invalid request");
     });
 });
+
+describe("challenge 5, get/api/articles", () => {
+  test(`does the article list length match the amount of articles in the database`, () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articleList.length).toEqual(13);
+      });
+  });
+
+  test(`does the returning array of objects have matching keys author
+  title
+  article_id
+  topic
+  created_at
+  votes
+  article_img_url
+  comment_count, which is the total count of all the comments with this article_id.`, () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        body.articleList.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(String),
+          });
+        });
+      });
+  });
+
+  test(`is the returning array of objects in descending order`, () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articleList).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+});
+
