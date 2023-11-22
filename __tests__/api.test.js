@@ -3,6 +3,7 @@ const seed = require("../db/seeds/seed.js");
 const app = require("../db/app.js");
 const db = require("../db/connection.js");
 const data = require("../db/data/test-data/index.js");
+const endPointsJSON = require("../endpoints.json")
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
@@ -32,6 +33,20 @@ describe("Challenge 2 /api/topics tests", () => {
         expect(body.msg).toEqual("Endpoint not found");
       });
   });
+});
+
+describe("challenge 3 get/api/info endpoints", () => {
+  test("does /api return json object with info attached?", () => {
+    return request(app)
+    .get('/api')
+    .expect(200)
+    .then(({body}) => {
+      console.log(body.endPointsJSON)
+      expect(body.endPointsJSON).toEqual(endPointsJSON)
+    })
+  })
+
+
 });
 
 describe("challenge 4, api/articles/:articleid/", () => {
@@ -65,7 +80,7 @@ describe("challenge 4, api/articles/:articleid/", () => {
       });
   });
 
-  test.only("if a completely invalid ID is passed will throw a different error 400 Invalid request", () => {
+  test("if a completely invalid ID is passed will throw a different error 400 Invalid request", () => {
     const fakeId = "admin";
     return request(app)
       .get(`/api/articles/${fakeId}`)

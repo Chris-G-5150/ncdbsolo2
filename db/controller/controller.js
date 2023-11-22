@@ -1,6 +1,8 @@
-const { getTopicsModel, getArticleByIdModel } = require("../models/newsModels");
+const { getTopicsModel, getArticleByIdModel} = require("../models/newsModels");
+const endPointsJSON = require("../../endpoints.json")
 
 exports.getTopicsController = (req, res, next) => {
+  console.log('hello', '<====getTopics')
   getTopicsModel()
     .then((topics) => {
       res.status(200).send({ topics });
@@ -19,4 +21,9 @@ exports.getArticleByIdController = (req, res, next) => {
       return res.status(200).send(article);
     })
     .catch(next);
+};
+
+exports.getInfoController = (req, res) => {
+    return res.status(200).send({endPointsJSON})
+
 };
