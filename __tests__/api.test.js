@@ -137,5 +137,19 @@ describe("challenge 5, get/api/articles", () => {
         });
       });
   });
-});
+
+  test(`does the returning array objects contain the body property which should be omitted`, () => {
+    return request(app)
+    .get(`/api/articles`)
+    .expect(200)
+    .then(({body}) => {
+      body.articleList.forEach((article) => {
+        expect(article).not.toHaveProperty('body');
+      });
+    });
+
+
+  })
+})
+;
 
