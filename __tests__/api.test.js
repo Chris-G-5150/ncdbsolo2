@@ -3,7 +3,7 @@ const seed = require("../db/seeds/seed.js");
 const app = require("../db/app.js");
 const db = require("../db/connection.js");
 const data = require("../db/data/test-data/index.js");
-const endPointsJSON = require("../endpoints.json")
+const endPointsJSON = require("../endpoints.json");
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
@@ -38,13 +38,51 @@ describe("Challenge 2 /api/topics tests", () => {
 describe("challenge 3 get/api/info endpoints", () => {
   test("does /api return json object with info attached?", () => {
     return request(app)
-    .get('/api')
-    .expect(200)
-    .then(({body}) => {
-      console.log(body.endPointsJSON)
-      expect(body.endPointsJSON).toEqual(endPointsJSON)
-    })
-  })
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.endPointsJSON).toEqual(endPointsJSON);
+      });
+  });
+});
 
+describe("challenge 4, api/articles/:articleid/", () => {
+  test("does the dynamic endpoint send back the correct article based on id", () => {
+    //I checked the valid article Ids in PSQL
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          article_id: 2,
+          title: "Sony Vaio; or, The Laptop",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
+          created_at: "2020-10-16T05:03:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+});
 
+test("if unknown id is selected, returns error message and status 404 for valid but non-existent article-id", () => {
+  return request(app)
+    .get(`/api/articles/5023`)
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("No article found with that ID");
+    });
+});
+
+test("if a completely invalid ID is passed will throw a different error 400 Invalid request", () => {
+  const fakeId = "admin";
+  return request(app)
+    .get(`/api/articles/${fakeId}`)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Invalid request");
+    });
 });

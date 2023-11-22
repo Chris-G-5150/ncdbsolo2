@@ -1,20 +1,28 @@
-const { getTopicsModel} = require("../models/newsModels");
-const endPointsJSON = require("../../endpoints.json")
+const { fetchTopicsModel, fetchArticleByIdModel } = require("../models/newsModels");
+const endPointsJSON = require("../../endpoints.json");
 
-exports.getTopicsController = (req, res, next) => {
-  console.log('hello', '<====getTopics')
-  getTopicsModel()
+exports.getTopics = (req, res, next) => {
+  console.log("hello", "<====getTopics");
+  fetchTopicsModel()
     .then((topics) => {
       res.status(200).send({ topics });
     })
     .catch(next);
 };
 
-exports.handle404Controller = (req, res) => {
+exports.handle404 = (req, res) => {
   return res.status(404).send({ msg: "Endpoint not found" });
 };
 
-exports.getInfoController = (req, res) => {
-    return res.status(200).send({endPointsJSON})
+exports.getArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+  fetchArticleByIdModel(article_id)
+    .then((article) => {
+      return res.status(200).send(article);
+    })
+    .catch(next);
+};
 
+exports.getInfo = (req, res) => {
+  return res.status(200).send({ endPointsJSON });
 };

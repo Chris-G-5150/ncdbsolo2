@@ -1,22 +1,28 @@
 const express = require("express");
 
 const {
-  getTopicsController,
-  handle404Controller,
-  getInfoController,
+  getTopics,
+  handle404,
+  getArticleById,
+  getInfo,
 } = require("./controller/controller.js");
+
+const {
+  customErrorHandler,
+  handleServerErrors,
+  handlePsqlErrors,
+} = require("../db/errorHandlers/errorHandlers.js");
 
 const app = express();
 
-app.get("/api/topics", getTopicsController);
-app.get("/api", getInfoController)
-app.get("/api/info/:infoId", getInfoController)
+app.get("/api/topics", getTopics);
+app.get("/api", getInfo);
+app.get("/api/articles/:article_id", getArticleById);
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send("server error!");
-});
+app.use(customErrorHandler);
+app.use(handlePsqlErrors);
+app.use(handleServerErrors);
 
-app.all("*", handle404Controller);
+app.all("*", handle404);
 
 module.exports = app;
