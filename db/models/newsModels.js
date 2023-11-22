@@ -1,12 +1,12 @@
 const db = require("../../db/connection.js");
 
-exports.getTopicsModel = () => {
+exports.fetchTopicsModel = () => {
   return db.query("SELECT * FROM topics").then(({ rows }) => {
     return rows;
   });
 };
 
-exports.getArticleByIdModel = (id) => {
+exports.fetchArticleByIdModel = (id) => {
   return db
     .query("SELECT * FROM articles WHERE article_id = $1;", [id])
     .then(({ rows }) => {
