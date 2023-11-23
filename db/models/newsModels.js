@@ -41,3 +41,14 @@ exports.fetchArticles = () => {
     return rows
   })
 };
+
+exports.fetchArticleIdComments = (articleId) => {
+  return db.query(`
+  SELECT * FROM comments
+  WHERE comments.article_id = $1
+  ORDER BY comments.created_at DESC;
+  `, [articleId])
+  .then(({rows}) => {
+    return rows
+  })
+}

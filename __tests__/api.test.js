@@ -150,6 +150,59 @@ describe("challenge 5, get/api/articles", () => {
 
 
   })
+});
+
+describe("challenge 6", () => {
+  test(`does the endpoint /api/:articleid/comments send back an array of comment objects with selected article id with correct keys?`, () => {
+    return request(app)
+      .get(`/api/1/comments`)
+      .expect(200)
+      .then(({body}) => {
+        body.commentsOnArticles.forEach((article) => {
+        expect(article).toMatchObject({
+          comment_id: expect.any(Number),
+          body: expect.any(String),
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String)
+        })
+      })
+    })
+  })
+
+  test("Does the article id in the endpoint match the one in the returning array of objects?", () => {
+    return request(app)
+      .get(`/api/1/comments`)
+      .expect(200)
+      .then(({body}) => {
+        body.commentsOnArticles.forEach((article) => {
+        expect(article.article_id).toEqual(1)
+      })
+    })
+  })
+
+  test("given an invalid article id is a 400 error returned?", () => {
+    return request(app)
+      .get(`/api/haberdashery/comments`)
+      .expect(400)
+      .then(({body}) => {
+        expect(body.msg).toBe("Invalid request")
+    })
+  })
+
+  test("are the comments brought back in date descending order?", () => {
+    return request(app)
+    .get(`/api/1/comments`)
+    .expect(200)
+    .then(({body}) => {
+      expect(body.commentsOnArticles).toBeSortedBy("created_at", {
+        descending: true,
+      });
+    });
+  })
 })
-;
+
+
+
 

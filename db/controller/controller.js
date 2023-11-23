@@ -2,6 +2,7 @@ const {
   fetchTopicsModel,
   fetchArticleByIdModel,
   fetchArticles,
+  fetchArticleIdComments
 } = require("../models/newsModels");
 const endPointsJSON = require("../../endpoints.json");
 
@@ -35,3 +36,12 @@ exports.getArticles = (req, res) => {
     return res.status(200).send({ articleList });
   });
 };
+
+exports.getArticleIdComments = (req, res, next) => {
+  const {article_id} = req.params
+  console.log(article_id,"<<<<<===== controller")
+  fetchArticleIdComments(article_id).then((commentsOnArticles) => {
+    return res.status(200).send({commentsOnArticles})
+  })
+  .catch(next)
+}
