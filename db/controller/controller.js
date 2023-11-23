@@ -2,9 +2,16 @@ const {
   fetchTopicsModel,
   fetchArticleByIdModel,
   fetchArticles,
-  fetchArticleIdComments,
+  fetchArticleIdComments
 } = require("../models/newsModels");
+
 const endPointsJSON = require("../../endpoints.json");
+
+const { checkExists } = require("../secondaryUtils/utils");
+
+
+
+
 
 exports.getTopics = (req, res, next) => {
   fetchTopicsModel()
@@ -38,10 +45,19 @@ exports.getArticles = (req, res) => {
 };
 
 exports.getArticleIdComments = (req, res, next) => {
-  const { article_id } = req.params;
-  fetchArticleIdComments(article_id)
-    .then((commentsOnArticles) => {
-      return res.status(200).send({ commentsOnArticles });
-    })
-    .catch(next);
-};
+  const {article_id} = req.params
+
+  const promises = [fetchArticleIdComments(article_id)]
+  if (article_id) {
+    promises.push(checkExists("articles", "article_id", article_id))
+  }
+
+  Promise.all(promises)
+  .then((resolvedPromises) => {
+    const commentsOnArticles = resolvedPromises[0]
+    res.status(200).send({commentsOnArticles})
+  })
+
+  
+  .catch(next)
+}

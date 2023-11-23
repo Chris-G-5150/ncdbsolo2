@@ -152,38 +152,30 @@ describe("challenge 5, get/api/articles", () => {
 describe("challenge 6", () => {
   test(`does the endpoint /api/:articleid/comments send back an array of comment objects with selected article id with correct keys?`, () => {
     return request(app)
-      .get(`/api/2/comments`)
-      .expect(200)
-      .then(({ body }) => {
-        if (body.commentsOnArticles.length > 0) {
-          body.commentsOnArticles.forEach((article) => {
-            expect(article).toMatchObject({
-              comment_id: expect.any(Number),
-              body: expect.any(String),
-              article_id: expect.any(Number),
-              author: expect.any(String),
-              votes: expect.any(Number),
-              created_at: expect.any(String),
-            });
-          });
-        } else {
-          expect(body.commentsOnArticles).toEqual([]);
-        }
-      });
-  });
-
-  test("Does the article id in the endpoint match the one in the returning array of objects?", () => {
-    return request(app)
       .get(`/api/1/comments`)
       .expect(200)
       .then(({ body }) => {
-        if (body.commentsOnArticles.length > 0) {
-          body.commentsOnArticles.forEach((article) => {
-            expect(article.article_id).toEqual(1);
+        expect(body.commentsOnArticles.length).toBe(11);
+        body.commentsOnArticles.forEach((article) => {
+          expect(article).toMatchObject({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            article_id: 1,
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
           });
-        } else {
-          expect(body.commentsOnArticles).toEqual([]);
-        }
+        });
+      });
+  });
+
+  test("expect an empty array to be returned when querying an article id with no comments", () => {
+    return request(app)
+      .get(`/api/2/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.commentsOnArticles.length).toBe(0);
+        expect(body.commentsOnArticles).toEqual([]);
       });
   });
 
@@ -196,18 +188,24 @@ describe("challenge 6", () => {
       });
   });
 
+  test("given an invalid article id is a 400 error returned?", () => {
+    return request(app)
+      .get(`/api/88648/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body.msg, "<<<<<<< article not found doesnt exist");
+        expect(body.msg).toBe("not found");
+      });
+  });
+
   test("are the comments brought back in date descending order?", () => {
     return request(app)
       .get(`/api/1/comments`)
       .expect(200)
       .then(({ body }) => {
-        if (body.commentsOnArticles.length > 0) {
-          expect(body.commentsOnArticles).toBeSortedBy("created_at", {
-            descending: true,
-          });
-        } else {
-          expect(body.commentsOnArticles).toEqual([]);
-        }
+        expect(body.commentsOnArticles).toBeSortedBy("created_at", {
+          descending: true,
+        });
       });
   });
 });
