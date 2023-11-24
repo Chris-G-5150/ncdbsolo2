@@ -52,4 +52,14 @@ exports.fetchArticleIdComments = (articleId) => {
       return rows
     })
   }
+
+
+exports.insertArticleComment = (commentToPost, articleId) => {
+
+  return db.query(`INSERT INTO comments(author, body, article_id) VALUES($1, $2, $3) RETURNING *;`, [commentToPost.user, commentToPost.body, articleId])
+  .then(({rows}) => {
+    console.log(rows, "<<<<<console logged rows in model")
+    return rows[0]
+  })
+}  
   
