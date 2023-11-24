@@ -212,39 +212,50 @@ describe("challenge 6", () => {
 describe("Challenge 7", () => {
   test("Does post /api/:article_id/comments send back the posted comment with correct formatting", () => {
     return request(app)
-      .post(`/api/1/comments`)
+      .post(`/api/articles/1/comments`)
       .send({ body: "Article go brrr", user: "rogersop" })
       .expect(201)
       .then(({ body }) => {
-        console.log(body, "<<< body sent back");
         expect(body).toMatchObject({
           comment_id: expect.any(Number),
           body: "Article go brrr",
           article_id: 1,
           author: "rogersop",
-          votes: expect.any(Number),
+          votes: 0,
           created_at: expect.any(String),
         });
       });
   });
 
-  test("Does POST /api/:articleid/comments send an error when given an username that doesn't exist in the database err code 401", () => {
+  test("Does POST /api/:articleid/comments send an error when given an username that doesn't exist in the database err code 404", () => {
     return request(app)
-      .post(`/api/1/comments`)
+      .post(`/api/articles/1/comments`)
       .send({ body: "Article go brrr", user: "sfckjlsdjvkldjnjkhnfvklhnkjld" })
-      .expect(401)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toEqual("User/Article Not found");
+        expect(body.msg).toEqual("not found");
       });
   });
 
   test("if an incorrect article id is selected does it send back 400 invalid request?", () => {
     return request(app)
-      .post(`/api/ufhjkdhbdjkg/comments`)
+      .post(`/api/articles/ufhjkdhbdjkg/comments`)
       .send({ body: "Article go brrr", user: "rogersop" })
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid request");
       });
   });
+
+  test("if a article id is selected that doesn't exiast does it send back 404 not found?", () => {
+    return request(app)
+      .post(`/api/articles/999/comments`)
+      .send({ body: "Article go brrr", user: "rogersop" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
 });
+
+

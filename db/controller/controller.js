@@ -63,11 +63,24 @@ exports.getArticleIdComments = (req, res, next) => {
 exports.postArticleIdComments = (req, res, next) => {
   
   const {article_id} = req.params
+  const newComment = req.body
+
+  const promises = [insertArticleComment(newComment, article_id)]
+
+  if (newComment) {
+    promises.push(checkExists("users", "username", newComment.user))
+    promises.push(checkExists("articles", "article_id", article_id))
+  }
+
+
+
   
-  insertArticleComment(req.body, article_id)
-  .then((commentPosted) => {
-    res.status(201).send(commentPosted)
+  Promise.all(promises)
+  .then((resolvedPromises) => {
+    const commentOnArticle = resolvedPromises[0]
+    console.log(commentOnArticle, "<===== controller resolved promises")
+    res.status(201).send(commentOnArticle)
   })
 
-  .catch(next);
+  .catch(next)
 };

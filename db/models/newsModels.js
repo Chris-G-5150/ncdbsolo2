@@ -22,7 +22,9 @@ exports.fetchArticleByIdModel = (id) => {
 };
 
 exports.fetchArticles = () => {
-  return db.query(`
+  return db
+    .query(
+      `
   SELECT
   articles.author, 
   articles.title, 
@@ -36,30 +38,35 @@ exports.fetchArticles = () => {
   LEFT JOIN comments 
   ON articles.article_id = comments.article_id
   GROUP BY articles.article_id
-  ORDER BY articles.created_at DESC;`)
-  .then(({rows}) => {
-    return rows
-  })
+  ORDER BY articles.created_at DESC;`
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
 };
 
 exports.fetchArticleIdComments = (articleId) => {
-    return db.query(`
+  return db
+    .query(
+      `
     SELECT * FROM comments
     WHERE comments.article_id = $1
     ORDER BY comments.created_at DESC;
-    `, [articleId])
-    .then(({rows}) => {
-      return rows
-    })
-  }
-
+    `,
+      [articleId]
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
 
 exports.insertArticleComment = (commentToPost, articleId) => {
-
-  return db.query(`INSERT INTO comments(author, body, article_id) VALUES($1, $2, $3) RETURNING *;`, [commentToPost.user, commentToPost.body, articleId])
-  .then(({rows}) => {
-    console.log(rows, "<<<<<console logged rows in model")
-    return rows[0]
-  })
-}  
-  
+  return db
+    .query(
+      `INSERT INTO comments(author, body, article_id) VALUES($1, $2, $3) RETURNING *;`,
+      [commentToPost.user, commentToPost.body, articleId]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};

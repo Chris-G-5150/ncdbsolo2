@@ -25,7 +25,7 @@ app.get("/api", getInfo);
 app.get("/api/articles/:article_id", getArticleById)
 app.get("/api/articles", getArticles);
 app.get("/api/:article_id/comments", getArticleIdComments)
-app.post("/api/:article_id/comments", postArticleIdComments) 
+app.post("/api/articles/:article_id/comments", postArticleIdComments) 
 
 app.use(customErrorHandler);
 app.use(handlePsqlErrors);
