@@ -188,12 +188,11 @@ describe("challenge 6", () => {
       });
   });
 
-  test("given an invalid article id is a 400 error returned?", () => {
+  test("given an invalid article id is a 404 error returned?", () => {
     return request(app)
       .get(`/api/88648/comments`)
       .expect(404)
       .then(({ body }) => {
-        console.log(body.msg, "<<<<<<< article not found doesnt exist");
         expect(body.msg).toBe("not found");
       });
   });
@@ -209,3 +208,54 @@ describe("challenge 6", () => {
       });
   });
 });
+
+describe("Challenge 7", () => {
+  test("Does post /api/:article_id/comments send back the posted comment with correct formatting", () => {
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .send({ body: "Article go brrr", user: "rogersop" })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toMatchObject({
+          comment_id: expect.any(Number),
+          body: "Article go brrr",
+          article_id: 1,
+          author: "rogersop",
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+
+  test("Does POST /api/:articleid/comments send an error when given an username that doesn't exist in the database err code 404", () => {
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .send({ body: "Article go brrr", user: "sfckjlsdjvkldjnjkhnfvklhnkjld" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("not found");
+      });
+  });
+
+  test("if an incorrect article id is selected does it send back 400 invalid request?", () => {
+    return request(app)
+      .post(`/api/articles/ufhjkdhbdjkg/comments`)
+      .send({ body: "Article go brrr", user: "rogersop" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid request");
+      });
+  });
+
+  test("if a article id is selected that doesn't exiast does it send back 404 not found?", () => {
+    return request(app)
+      .post(`/api/articles/999/comments`)
+      .send({ body: "Article go brrr", user: "rogersop" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+});
+
+
