@@ -1,4 +1,6 @@
 node_modules
 .env.development
 .env.test
+.env.production
 commentsoutput.txt
+articlesoutput.txt

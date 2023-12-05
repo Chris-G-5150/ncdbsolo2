@@ -70,3 +70,57 @@ exports.insertArticleComment = (commentToPost, articleId) => {
       return rows[0];
     });
 };
+
+exports.patchArticleVotes = (voteCountChange, articleId) => {
+  if (typeof voteCountChange.inc_votes === "number") {
+    return db
+      .query(
+        `
+        UPDATE articles 
+        SET votes = votes + $1 
+        WHERE article_id = $2
+        RETURNING *;`,
+        [voteCountChange.inc_votes, articleId]
+      )
+
+      .then(({ rows }) => {
+        return rows[0];
+      });
+  } else
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request",
+    });
+};
+
+exports.deleteComment = (commentId) => {
+  return db
+    .query(
+      `
+    DELETE FROM comments
+    WHERE comment_id = $1
+    RETURNING*;`,
+      [commentId]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: "comment not found",
+        });
+      }
+    });
+};
+
+
+
+exports.fetchUsers = () => {
+  return db
+    .query(`
+    SELECT * FROM users;`)
+    .then(({rows}) => {
+      console.log(rows, "rows in model")
+      return rows
+      
+    });
+}

@@ -1,4 +1,7 @@
 exports.customErrorHandler = (err, req, res, next) => {
+  console.log(err, "customErrorHandler");
+
+  console.log(err);
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else {
@@ -7,6 +10,7 @@ exports.customErrorHandler = (err, req, res, next) => {
 };
 
 exports.handlePsqlErrors = (err, req, res, next) => {
+  console.log(err, "errorhandler PQL");
   if (err.code === "23503") {
     res.status(404).send({ msg: "Article not found" });
   } else if (err.code === "22P02") {
