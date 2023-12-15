@@ -41,7 +41,8 @@ exports.getInfo = (req, res) => {
 };
 
 exports.getArticles = (req, res) => {
-    fetchArticles().then((articleList) => {
+    const {topic} = req.query()
+    fetchArticles(topic).then((articleList) => {
         return res.status(200).send({ articleList });
     });
 };
@@ -120,11 +121,11 @@ exports.getUsers = (req, res, next) => {
         .catch(next);
 };
 
-exports.getApiArticles = (req, res, next) => {
-    const { topic } = req.query;
-    selectApiArticles(topic)
-        .then((articles) => {
-            res.status(200).send({ articles });
-        })
-        .catch(next);
-};
+// exports.getApiArticles = (req, res, next) => {
+//     const { topic } = req.query;
+//     selectApiArticles(topic)
+//         .then((articles) => {
+//             res.status(200).send({ articles });
+//         })
+//         .catch(next);
+// };
