@@ -41,7 +41,7 @@ exports.getInfo = (req, res) => {
 };
 
 exports.getArticles = (req, res) => {
-    const {topic} = req.query()
+    const {topic} = req.query
     fetchArticles(topic).then((articleList) => {
         return res.status(200).send({ articleList });
     });
