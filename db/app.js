@@ -12,6 +12,7 @@ const {
     updateArticleVotes,
     deleteCommentById,
     getUsers,
+    getApiArticles
 } = require("./controller/controller.js");
 
 const {
