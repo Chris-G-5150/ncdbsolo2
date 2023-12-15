@@ -118,3 +118,12 @@ exports.getUsers = (req, res, next) => {
 
   .catch(next)
 }
+
+exports.getApiArticles = (req, res, next) => {
+  const { topic } = req.query;
+  selectApiArticles(topic)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
+};

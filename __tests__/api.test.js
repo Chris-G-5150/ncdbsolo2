@@ -397,24 +397,40 @@ describe("challenge 10", () => {
             });
     });
 });
-// TESTS: send an empty object back after deletion to prove its not toHaveProperty
-// 400 comment id = dkgsfhjcsjhbfjsgj
-// 404 comment id doesnt exist 999
-//
-// })
 
-// describe ("challenge 10", () => {
-//   array of user objects test no more
-// })
 
-// describe("11 api/articles", () => {
-
-//   responds with articles a query of topic
-
-//   TESTS:
-//   200 one of the topics that does exist but doesnt have any articles, ampty array but still 200 Promise.all
-//   404 path incorrect
-
-// })
-
-// decribe("comment count already donw ith get article by id have a look at that one look at the model for select articles")
+describe(`GET /api/articles`, () => {
+    test('200: responds with a topic when given a query of mitch', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toHaveLength(12);
+          body.articles.forEach((article) => {
+            expect(typeof article.title).toBe('string');
+            expect(typeof article.topic).toBe('string');
+            expect(typeof article.article_id).toBe('number');
+            expect(typeof article.author).toBe('string');
+            expect(typeof article.created_at).toBe('string');
+            expect(typeof article.votes).toBe('number');
+            expect(typeof article.article_img_url).toBe('string');
+          });
+        });
+    })
+    test('200: responds with an empty array if the topic we are trying to search has no articles', () => {
+      return request(app)
+        .get('/api/articles?topic=paper')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toEqual([]);
+        });
+    })
+    test('404: responds with an error message if path is incorrect', () => {
+      return request(app)
+        .get('/api/article?topics=cats')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe('not found');
+        });
+    })
+})
