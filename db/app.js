@@ -12,7 +12,7 @@ const {
     updateArticleVotes,
     deleteCommentById,
     getUsers,
-    getApiArticles
+    getArticlesByTopic
 } = require("./controller/controller.js");
 
 const {
@@ -26,7 +26,7 @@ app.use(cors());
 app.use(express.json());
 
 
-// app.get("/api/topics", getApiArticles)
+
 app.get("/api/topics", getTopics);
 app.get("/api", getInfo);
 app.get("/api/articles/:article_id", getArticleById);

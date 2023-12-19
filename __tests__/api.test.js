@@ -363,7 +363,7 @@ describe("challenge 9", () => {
 });
 
 describe("challenge 10", () => {
-    test.only("/api/users should return users with attributes username, name and avatar_url", () => {
+    test("/api/users should return users with attributes username, name and avatar_url", () => {
         return request(app)
             .get("/api/users")
             .expect(200)
@@ -399,14 +399,14 @@ describe("challenge 10", () => {
 });
 
 
-describe(`GET /api/articles`, () => {
-    test('200: responds with a topic when given a query of mitch', () => {
+describe(`GET /api/articles, topics`, () => {
+    test.only('200: responds with a topic when given a query of mitch', () => {
       return request(app)
         .get('/api/articles?topic=mitch')
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles).toHaveLength(12);
-          body.articles.forEach((article) => {
+          expect(body.articleList).toHaveLength(12);
+          body.articleList.forEach((article) => {
             expect(typeof article.title).toBe('string');
             expect(typeof article.topic).toBe('string');
             expect(typeof article.article_id).toBe('number');
@@ -430,7 +430,7 @@ describe(`GET /api/articles`, () => {
         .get('/api/article?topics=cats')
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe('not found');
+          expect(body.msg).toBe('Endpoint not found');
         });
     })
 })

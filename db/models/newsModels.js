@@ -22,6 +22,7 @@ exports.fetchArticleByIdModel = (id) => {
 };
 
 exports.fetchArticles = (topic) => {
+    console.log(topic, "topic in fetch articles")
     let queryString = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id`;
     const queryValues = [];
     if (topic) {
@@ -112,7 +113,7 @@ exports.fetchUsers = () => {
     SELECT * FROM users;`
         )
         .then(({ rows }) => {
-            console.log(rows, "rows in model");
+            
             return rows;
         });
 };

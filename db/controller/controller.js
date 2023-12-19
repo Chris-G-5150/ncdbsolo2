@@ -7,7 +7,7 @@ const {
     patchArticleVotes,
     deleteComment,
     fetchUsers,
-    selectApiArticles,
+
 } = require("../models/newsModels");
 
 const endPointsJSON = require("../../endpoints.json");
@@ -23,7 +23,7 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.handle404 = (req, res) => {
-    console.log(req, "<<<<handle404 in controllers");
+    
     return res.status(404).send({ msg: "Endpoint not found" });
 };
 
@@ -42,7 +42,9 @@ exports.getInfo = (req, res) => {
 
 exports.getArticles = (req, res) => {
     const {topic} = req.query
+    console.log(topic, "topic in getArticles")
     fetchArticles(topic).then((articleList) => {
+        console.log(articleList)
         return res.status(200).send({ articleList });
     });
 };
@@ -121,11 +123,3 @@ exports.getUsers = (req, res, next) => {
         .catch(next);
 };
 
-// exports.getApiArticles = (req, res, next) => {
-//     const { topic } = req.query;
-//     selectApiArticles(topic)
-//         .then((articles) => {
-//             res.status(200).send({ articles });
-//         })
-//         .catch(next);
-// };
